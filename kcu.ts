@@ -59,7 +59,7 @@ const getLectureRooms = async (page: Page) => {
 };
 
 const playVideo = async (page: Page, url: string, body: string) => {
-    // await page.request.post(url, {data: body});
+    const jsPlayer: any = {};
     await page.goto(`${url}?${body}`);
 
     const iframe = page.frameLocator("#cndIfram").first().locator(":root");
@@ -69,13 +69,14 @@ const playVideo = async (page: Page, url: string, body: string) => {
     }
 
     console.log("jsPlayer is ready");
+    await iframe.evaluate(() => jsPlayer.play());
 
-    // @ts-ignore
-    while (await iframe.evaluate(() => jsPlayer.remainingTime()) > 1) {
+    while (!(await iframe.evaluate(() => jsPlayer.ended()))) {
         await new Promise(r => setTimeout(r, 1000));
-        // @ts-ignore
         console.log(await iframe.evaluate(() => jsPlayer.remainingTime()));
     }
+
+    console.log("jsPlayer is ended");
 };
 
 (async () => {
