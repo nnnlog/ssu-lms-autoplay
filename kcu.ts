@@ -80,7 +80,7 @@ const playVideo = async (page: Page, url: string, body: string) => {
 
 (async () => {
     const browser = await chromium.launch({
-        headless: false,
+        headless: process.env["HEADLESS"]?.toLowerCase() === "true",
         channel: "chrome"
     });
     const page = await browser.newPage();
