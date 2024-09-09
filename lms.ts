@@ -82,9 +82,9 @@ const playMovie = async (page: Page, url: string) => {
     while (await page.evaluate(() => {
         return uniPlayer.isCurrentStoryLastStory() === false || (bcPlayController._vcPlayController._duration - bcPlayController._vcPlayController._currTime >= 1);
     })) {
-        // console.log(await page.evaluate(() => {
-        //     return [uniPlayer.isCurrentStoryLastStory(), bcPlayController._vcPlayController._duration - bcPlayController._vcPlayController._currTime, bcPlayController._vcPlayController._duration];
-        // }));
+        console.log(await page.evaluate(() => {
+            return bcPlayController._vcPlayController._duration - bcPlayController._vcPlayController._currTime;
+        }));
         if (!(await page.evaluate(() => uniPlayer.isCurrentStoryLastStory()))) {
             await page.evaluate(() => {
                 storyWorker.playNextStory();
