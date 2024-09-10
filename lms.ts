@@ -1,4 +1,5 @@
 import {chromium, Page} from "playwright";
+import qs from "querystring";
 import configDotenv from "dotenv";
 
 configDotenv.config();
@@ -57,7 +58,11 @@ const getRemainLectureMovies = async (page: Page, apiToken: string): Promise<str
                 return !item.completed && item.content_type === "attendance_item" && item.content_data.use_attendance === true && item.content_data.opened;
             }).map((item: any) => {
                 let playId = item.content_data.item_content_data.content_id;
-                return `https://commons.ssu.ac.kr/em/${playId}?startat=0.00&endat=0.00&TargetUrl=https://canvas.ssu.ac.kr/learningx/api/v1/courses/${course}/sections/0/components/${item.content_data.item_id}/progress?user_id=${process.env.LMS_ID!}&content_id=${playId}`;
+                return `https://commons.ssu.ac.kr/em/${playId}?${qs.stringify({
+                    startat: 0.00,
+                    endat: 0.00,
+                    TargetUrl: `https://canvas.ssu.ac.kr/learningx/api/v1/courses/${course}/sections/0/components/${item.content_data.item_id}/progress?user_id=${process.env.LMS_ID!}&content_id=${playId}&content_type=${item.content_data.item_content_data.content_type}&pr=1&lg=ko`
+                })}`;
             });
         }))
     }
@@ -90,12 +95,11 @@ const playMovie = async (page: Page, url: string) => {
                 storyWorker.playNextStory();
             });
         }
+        await page.evaluate(() => {
+            sendPlayedTime(LMSState.UPDATE_DATA);
+        });
         await new Promise(r => setTimeout(r, 1000));
     }
-
-    console.log(await page.evaluate(() => {
-        return [uniPlayer.isCurrentStoryLastStory(), bcPlayController._vcPlayController._duration - bcPlayController._vcPlayController._currTime, , bcPlayController._vcPlayController._duration];
-    }));
 
     await page.evaluate(() => {
         sendPlayedTime(LMSState.UPDATE_DATA);
