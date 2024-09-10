@@ -13,20 +13,34 @@ const closePopup = async (page: Page) => {
 const login = async (page: Page) => {
     await page.goto("https://portal.kcu.ac/");
     await page.waitForURL((s: URL) => s.toString().startsWith("https://portal.kcu.ac/html/main/ssoko.html?result="));
-
-    await closePopup(page);
+    await page.waitForLoadState("domcontentloaded");
 
     await page.fill("#userId", process.env.KCU_ID!);
     await page.fill("#userPw", process.env.KCU_PW!);
 
-    await page.locator("#loginBtnUserId").click();
+    {
+        let ok: boolean;
+        do {
+            ok = false;
+            await page.locator("#loginBtnUserId").first().click({
+                timeout: 1000,
+            }).then(() => ok = true).catch(() => closePopup(page));
+        } while (!ok);
+    }
     await page.waitForURL("https://portal.kcu.ac/html/main/index.html?portalPage=portal_main");
+    await page.waitForLoadState("domcontentloaded");
 
-    await closePopup(page);
-    await page.locator(".link_room").first().click();
+    {
+        let ok: boolean;
+        do {
+            ok = false;
+            await page.locator(".link_room").first().click({
+                timeout: 1000,
+            }).then(() => ok = true).catch(() => closePopup(page));
+        } while (!ok);
+    }
     await page.waitForURL("https://lms.kcu.ac/dashBoard/std");
     await page.waitForLoadState("domcontentloaded");
-    await closePopup(page);
 };
 
 const getLectureRooms = async (page: Page) => {
@@ -49,9 +63,16 @@ const getLectureRooms = async (page: Page) => {
                 resolve({url, body});
             }));
 
-            await lecture.locator("button").first().click();
+            {
+                let ok: boolean;
+                do {
+                    ok = false;
+                    await lecture.locator("button").first().click({
+                        timeout: 1000,
+                    }).then(() => ok = true).catch(() => closePopup(page));
+                } while (!ok);
+            }
             ret.push(await wait);
-            // break;
         }
     }
 
