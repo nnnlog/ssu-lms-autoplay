@@ -82,6 +82,9 @@ const playMovie = async (page: Page, url: string) => {
         await new Promise(r => setTimeout(r, 10));
     }
 
+    // @ts-ignore
+    await page.evaluate(() => uniPlayer.confirm = (a, b, c, d, e) => d());
+
     console.log(`uniPlayer is ready`);
 
     while (await page.evaluate(() => {
