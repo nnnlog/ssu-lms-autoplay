@@ -14,7 +14,7 @@ const login = async (page: Page) => {
     await page.evaluate(() => LoginInfoSend('LoginInfo'));
     await page.waitForURL("https://lms.ssu.ac.kr/");
 
-    await page.goto("https://canvas.ssu.ac.kr/learningx/dashboard?user_login=20221494&locale=ko");
+    await page.goto(`https://canvas.ssu.ac.kr/learningx/dashboard?user_login=${process.env.LMS_ID!}&locale=ko`);
     await page.waitForLoadState("domcontentloaded");
 };
 
@@ -23,7 +23,7 @@ const getApiToken = async (page: Page): Promise<string> => {
 };
 
 const getDefaultTerms = async (page: Page, apiToken: string): Promise<number[]> => {
-    const response = await (await fetch("https://canvas.ssu.ac.kr/learningx/api/v1/users/20221494/terms?include_invited_course_contained=true", {
+    const response = await (await fetch(`https://canvas.ssu.ac.kr/learningx/api/v1/users/${process.env.LMS_ID!}/terms?include_invited_course_contained=true`, {
         headers: {
             "Authorization": `Bearer ${apiToken}`
         }
