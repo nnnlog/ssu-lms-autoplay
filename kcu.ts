@@ -11,8 +11,8 @@ const closePopup = async (page: Page) => {
 };
 
 const login = async (page: Page) => {
-    await page.goto("https://portal.kcu.ac/");
-    await page.waitForURL((s: URL) => s.toString().startsWith("https://portal.kcu.ac/html/main/ssoko.html?result="));
+    await page.goto("https://lms.kcu.ac/dashBoard/std");
+    await page.waitForURL((s: URL) => s.toString().startsWith("https://portal.kcu.ac/html/main/ssoko.html?returnUrl="));
     await page.waitForLoadState("domcontentloaded");
 
     await page.fill("#userId", process.env.KCU_ID!);
@@ -27,19 +27,9 @@ const login = async (page: Page) => {
             }).then(() => ok = true).catch(() => closePopup(page));
         } while (!ok);
     }
-    await page.waitForURL("https://portal.kcu.ac/html/main/index.html?portalPage=portal_main");
+    await page.waitForURL("https://lms.kcu.ac/dashBoard/std");
     await page.waitForLoadState("domcontentloaded");
 
-    {
-        let ok: boolean;
-        do {
-            ok = false;
-            await page.locator(".link_room").first().click({
-                timeout: 1000,
-            }).then(() => ok = true).catch(() => closePopup(page));
-        } while (!ok);
-    }
-    await page.waitForURL("https://lms.kcu.ac/dashBoard/std");
     await page.waitForLoadState("domcontentloaded");
 };
 
