@@ -29,7 +29,7 @@ const login = async (page: Page) => {
 
             await page.locator("#loginBtnUserId").first().click({
                 timeout: 1000,
-            }).then(() => ok = true).catch(() => {});
+            }).catch(() => ok = true);
         } while (!ok);
     }
     await page.waitForURL("https://lms.kcu.ac/dashBoard/std");
