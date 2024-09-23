@@ -17,16 +17,23 @@ const login = async (page: Page) => {
 
     await page.fill("#userId", process.env.KCU_ID!);
     await page.fill("#userPw", process.env.KCU_PW!);
+    await page.evaluate("document.getElementById('loginBtnUserId').click()");
 
-    {
-        let ok: boolean;
-        do {
-            ok = false;
-            await page.locator("#loginBtnUserId").first().click({
-                timeout: 1000,
-            }).then(() => ok = true).catch(() => closePopup(page));
-        } while (!ok);
-    }
+    // {
+    //     let ok: boolean;
+    //     do {
+    //         ok = false;
+    //         await page.locator("#loginBtnUserId").first().click({
+    //             timeout: 1000,
+    //         }).then(() => {
+    //             ok = true;
+    //             console.log("clicked");
+    //         }).catch((e) => {
+    //             closePopup(page);
+    //             console.log(e);
+    //         });
+    //     } while (!ok);
+    // }
     await page.waitForURL("https://lms.kcu.ac/dashBoard/std");
     await page.waitForLoadState("domcontentloaded");
 
