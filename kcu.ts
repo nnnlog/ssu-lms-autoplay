@@ -4,10 +4,13 @@ import configDotenv from "dotenv";
 configDotenv.config();
 
 const closePopup = async (page: Page) => {
+    let ok: boolean = false;
     while (await page.locator("#close").first().isVisible()) {
         await page.locator("#close").first().click();
         await new Promise(r => setTimeout(r, 1000));
+        ok = true;
     }
+    return ok;
 };
 
 const login = async (page: Page) => {
@@ -17,22 +20,16 @@ const login = async (page: Page) => {
 
     await page.fill("#userId", process.env.KCU_ID!);
     await page.fill("#userPw", process.env.KCU_PW!);
-    await page.evaluate("document.getElementById('loginBtnUserId').click()");
 
     {
         let ok: boolean;
         do {
             ok = false;
+            if (await closePopup(page)) continue;
+
             await page.locator("#loginBtnUserId").first().click({
                 timeout: 1000,
-            }).then(() => {
-                ok = true;
-                console.log("clicked");
-            }).catch((e) => {
-                // closePopup(page);
-                console.log(page.locator("#loginBtnUserId").first().isVisible())
-                console.log(e);
-            });
+            }).then(() => ok = true).catch(() => {});
         } while (!ok);
     }
     await page.waitForURL("https://lms.kcu.ac/dashBoard/std");
