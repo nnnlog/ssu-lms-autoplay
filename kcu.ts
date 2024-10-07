@@ -87,9 +87,9 @@ const playVideo = async (page: Page, url: string, body: string) => {
     console.log("jsPlayer is ready");
     await iframe.evaluate(() => jsPlayer.play());
 
-    while (!(await iframe.evaluate(() => jsPlayer.ended()))) {
+    while (!(await iframe.evaluate(() => jsPlayer.ended))) {
         await new Promise(r => setTimeout(r, 1000));
-        console.log(await iframe.evaluate(() => jsPlayer.remainingTime()));
+        console.log(await iframe.evaluate(() => [jsPlayer.currentTime, jsPlayer.duration]));
     }
 
     console.log("jsPlayer is ended");
