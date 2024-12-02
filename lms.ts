@@ -53,6 +53,9 @@ const getRemainLectureMovies = async (page: Page, apiToken: string): Promise<str
                 "Authorization": `Bearer ${apiToken}`
             },
         })).json();
+
+        if (typeof response === "object" && response.message === "forbidden") continue; // unregistered course (pending invitation)
+
         urls.push(...response.map((module: any) => {
             return module.module_items.filter((item: any) => {
                 return !item.completed && item.content_type === "attendance_item" && item.content_data.use_attendance === true && item.content_data.opened;
