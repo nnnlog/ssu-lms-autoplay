@@ -9,6 +9,8 @@ npx tsc
 ## Configuration
 Create the file named `.env`.
 ```text
+HEADLESS=true
+
 KCU_ID=<숭실사이버대학교 LMS 학번>
 KCU_PW=<숭실사이버대학교 LMS 비밀번호>
 
