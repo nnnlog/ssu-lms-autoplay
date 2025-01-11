@@ -29,7 +29,7 @@ const getDefaultTerms = async (page: Page, apiToken: string): Promise<number[]> 
         }
     })).json();
 
-    return response.enrollment_terms.filter((term: any) => term.default).map((term: any) => term.id);
+    return response.enrollment_terms.filter((term: any) => new Date(term.start_at).getTime() <= Date.now() && Date.now() <=new Date(term.end_at).getTime()).map((term: any) => term.id);
 };
 
 const getCourses = async (page: Page, apiToken: string): Promise<number[]> => {
