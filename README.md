@@ -23,3 +23,6 @@ LMS_PW=<숭실대학교 비밀번호>
 node dist/kcu.js # 숭실사이버대학교 LMS
 node dist/lms.js # 숭실대학교 LMS
 ```
+
+## Disclaimer
+* You have all responsibility for using this software, the developer of software doesn't have the responsibility.
