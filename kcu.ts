@@ -48,7 +48,12 @@ const getLectureRooms = async (page: Page) => {
                 const url = route.request().url();
                 const body = route.request().postData();
 
-                if (body === null) return;
+                console.log(url, body);
+
+                if (url !== "https://lms.kcu.ac/atnlcSubj/lectRoom" || body === null) {
+                    await route.continue();
+                    return;
+                }
 
                 await route.abort();
                 await page.unrouteAll();
